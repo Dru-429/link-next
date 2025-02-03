@@ -18,7 +18,7 @@ const page = () => {
             <input
               type="text"
               placeholder="linknext.com/your-url"
-              className="px-2 py-1 rounded-lg focus:outline-yellow-500 bg-zinc-100 h-10"
+              className="px-2 py-1 rounded-lg focus:outline-yellow-500 bg-zinc-100 h-8 border-none"
             />
 
             <button className="px-4 py-1 rounded-2xl text-zinc-950 bg-yellow-300 hover:bg-yellow-500 hover:scale-[1.09]">
@@ -28,7 +28,7 @@ const page = () => {
         </div>
 
         <div className="flex items-center justify-center md:pl-10">
-          <img src={"section1.png"} alt="image" />
+          <img src={"home.png"} alt="image" />
         </div>
       </section>
 
