@@ -1,12 +1,76 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 const generate = () => {
+  //   const [link, setLink] = useState("");
+  //   const [linkText, setLinkText] = useState("");
+
+  const [handel, setHandel] = useState("");
+  const [picture, setPicture] = useState("");
+  const [links, setLinks] = useState([
+    {
+      link: "",
+      linkText: "",
+    },
+  ]);
+
+  const handelChangeLink = (currIndex, currLink, currLinkText) => {
+    setLinks((prev) => {
+      const updatedList = [...prev];
+      updatedList[currIndex] = { link: currLink, linkText: currLinkText };
+
+      return updatedList;
+    });
+  };
+
+  const addLink = () => {
+    setLinks((prev) => [...prev, { link: "", linkText: "" }]);
+  };
+
+  const submitLinks = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          handler: handel,
+          links,
+          pic: picture,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        toast(result.message);
+      } else {
+        // Handle errors from the server
+        console.error(
+          "Error submitting data:",
+          result.error || "An error occurred"
+        );
+        toast.error("Error submitting data. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      toast.error("An error occurred while submitting data.");
+    }
+  };
+
   return (
     <div className="grid grid-cols-2 w-full min-h-screen">
       <div className="col-1 border-yellow-300 border-r-2 rounded-r-xl max-h-screen overflow-y-auto flex flex-col gap-10 justify-center items-center">
         <h1 className="font-bold text-5xl text-yellow-400 capitalize tracking-tighter leading-none ">
           claim your own Link Next
         </h1>
+        <ToastContainer />
 
         <div className="flex flex-col justify-start items-start text-lg gap-7 ">
           {/* //step1: claiming handel  */}
@@ -17,35 +81,53 @@ const generate = () => {
             <input
               type="text"
               placeholder="Enter your handel "
+              onChange={(e) => setHandel(e.target.value)}
+              value={handel}
               className="px-4 py-1 mx-10 bg-yellow-50 focus:outline-yellow-400 rounded-2xl text-zinc-900 text-sm "
             />
           </div>
 
-          {/* //step2: claiming handel  */}
+          {/* //step2: adding links*/}
           <div className="flex flex-col gap-3 ">
             <h2 className="font-medium text-yellow-400 capitalize tracking-tight leading-none ">
               Step 2: Add Links
             </h2>
 
-            <div className="flex items-start gap-5 mx-10">
-              <input
-                type="text"
-                placeholder="Enter link text"
-                className="px-4 py-1 bg-yellow-50 focus:outline-yellow-400 rounded-2xl text-zinc-900 text-sm "
-              />
-              <input
-                type="text"
-                placeholder="Enter link"
-                className="px-4 py-1 bg-yellow-50 focus:outline-yellow-400 rounded-2xl text-zinc-900 text-sm "
-              />
-            </div>
+            {links &&
+              links.map((item, index) => {
+                return (
+                  <div key={index} className="flex items-start gap-5 mx-10">
+                    <input
+                      type="text"
+                      placeholder="Enter link text"
+                      onChange={(e) =>
+                        handelChangeLink(index, item.link, e.target.value)
+                      }
+                      //   value={item.linkText}
+                      className="px-4 py-1 bg-yellow-50 focus:outline-yellow-400 rounded-2xl text-zinc-900 text-sm "
+                    />
+                    <input
+                      type="text"
+                      placeholder="Enter link"
+                      onChange={(e) =>
+                        handelChangeLink(index, e.target.value, item.linkText)
+                      }
+                      //   value={item.link}
+                      className="px-4 py-1 bg-yellow-50 focus:outline-yellow-400 rounded-2xl text-zinc-900 text-sm "
+                    />
+                  </div>
+                );
+              })}
 
-            <button className="px-4 py-1 mx-10 w-fit text-sm rounded-2xl text-zinc-950 bg-yellow-300 hover:bg-yellow-500 hover:scale-[1.09]">
-              Add Link
+            <button
+              className="px-4 py-1 mx-10 w-fit text-sm rounded-2xl text-zinc-950 bg-yellow-300 hover:bg-yellow-500 hover:scale-[1.09]"
+              onClick={() => addLink()}
+            >
+              Add Link +
             </button>
           </div>
 
-          {/* //step1: claiming handel  */}
+          {/* //step3: done*/}
           <div className="flex flex-col gap-3 ">
             <h2 className="font-medium text-yellow-400 capitalize tracking-tight leading-none">
               Step 3: Add picture url & submit
@@ -53,10 +135,17 @@ const generate = () => {
             <input
               type="text"
               placeholder="Enter your image url "
+              onChange={(e) => setPicture(e.target.value)}
+              value={picture}
               className="px-4 py-1 mx-10 bg-yellow-50 focus:outline-yellow-400 rounded-2xl text-zinc-900 text-sm "
             />
 
-            <button className=" mt-10 px-4 py-1 mx-10 w-fit text-sm rounded-2xl text-zinc-950 bg-yellow-300 hover:bg-yellow-500 hover:scale-[1.09]">
+            <button
+              className=" mt-10 px-4 py-1 mx-10 w-fit text-sm rounded-2xl text-zinc-950 bg-yellow-300 hover:bg-yellow-500 hover:scale-[1.09]"
+              onClick={() => {
+                submitLinks();
+              }}
+            >
               Done...
             </button>
           </div>
