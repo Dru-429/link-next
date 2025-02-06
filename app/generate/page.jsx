@@ -31,39 +31,44 @@ const generate = () => {
 
   const submitLinks = async () => {
     try {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+  
+      const raw = JSON.stringify({
+        links,
+        handler: handel,
+        pic: picture,
+      });
+  
       const response = await fetch("http://localhost:3000/api/add", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          handler: handel,
-          links,
-          pic: picture,
-        }),
+        headers: myHeaders,
+        body: raw,
       });
-
+  
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error submitting data.");
       }
-
+  
       const result = await response.json();
+  
       if (result.success) {
-        toast(result.message);
+        toast.success(result.message);
+        // Clear form fields after successful submission
+        setLinks([{ link: "", linkText: "" }]); 
+        setHandel("");
+        setPicture("");
       } else {
-        // Handle errors from the server
-        console.error(
-          "Error submitting data:",
-          result.error || "An error occurred"
-        );
-        toast.error("Error submitting data. Please try again.");
+        toast.error(result.message);
       }
+  
     } catch (error) {
       console.error("Error submitting data:", error);
       toast.error("An error occurred while submitting data.");
     }
   };
-
+  
   return (
     <div className="grid grid-cols-2 w-full min-h-screen">
       <div className="col-1 border-yellow-300 border-r-2 rounded-r-xl max-h-screen overflow-y-auto flex flex-col gap-10 justify-center items-center">
