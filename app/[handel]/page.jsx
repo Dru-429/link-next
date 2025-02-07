@@ -1,9 +1,13 @@
 import React from "react";
 import Link from "next/link";
+import clientPromise from "@/lib/mongodb";
 
-const page = ({ params }) => {
+const page = async ({ params }) => {
 
   const { handel } = params
+
+  const client = await clientPromise
+  
 
   const item = {
     _id: {
@@ -30,6 +34,7 @@ const page = ({ params }) => {
 
   return (
     <div className="flex min-h-screen bg-purple-400 justify-center items-start py-10">
+
       {item && (
         <div className="photo flex justify-center flex-col items-center gap-4">
           <img src={item.pic} alt="profile-pic" className="h-[10vh] w-[10vh] rounded-full" />
@@ -48,6 +53,7 @@ const page = ({ params }) => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
