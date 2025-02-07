@@ -1,13 +1,14 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 const generate = () => {
   //   const [link, setLink] = useState("");
   //   const [linkText, setLinkText] = useState("");
-
-  const [handel, setHandel] = useState("");
+    const searchParams = useSearchParams()
+  const [handel, setHandel] = useState(searchParams.get('handel'));
   const [picture, setPicture] = useState("");
   const [links, setLinks] = useState([
     {

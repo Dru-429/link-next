@@ -1,6 +1,13 @@
-import React from "react";
+"use client"
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const page = () => {
+
+  const [handel, setHandel] = useState("")
+  const router = useRouter()
+
   return (
     <main className="bg-zinc-950 text-zinc-100 min-h-screen min-w-screen ">
       <section className="md:mx-[10vw] md:grid grid-cols-2 min-h-screen mt-20">
@@ -17,11 +24,22 @@ const page = () => {
           <div className="flex justify-start items-center  gap-5 mt-10">
             <input
               type="text"
-              placeholder="linknext.com/your-url"
-              className="px-2 py-1 rounded-lg focus:outline-yellow-500 bg-zinc-100 h-8 border-none"
+              placeholder="your handle"
+              value={handel}
+              onChange={ (e) => {
+                return(
+                  setHandel(e.target.value)
+                )
+              }}
+              className="px-2 py-1 rounded-lg focus:outline-yellow-500 bg-zinc-100 h-8 border-none text-zinc-900"
             />
 
-            <button className="px-4 py-1 rounded-2xl text-zinc-950 bg-yellow-300 hover:bg-yellow-500 hover:scale-[1.09]">
+            <button 
+              className="px-4 py-1 rounded-2xl text-zinc-950 bg-yellow-300 hover:bg-yellow-500 hover:scale-[1.09]"
+              onClick={ () => {
+                router.push(`/generate?handel=${handel}`)
+              }}
+            >
               Claim now
             </button>
           </div>
