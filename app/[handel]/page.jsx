@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import clientPromise from "@/lib/mongodb";
+import { notFound } from "next/navigation";
 
 const page = async ({ params }) => {
   const { handel } = params;
@@ -8,7 +9,7 @@ const page = async ({ params }) => {
   const client = await clientPromise;
   const db = client.db("linknext");
   const collection = db.collection("links");
-  const item = await collection.findOne({ handle: handle });
+  const item = await collection.findOne({ handler: handel });
   if (!item) {
     return notFound();
   }
