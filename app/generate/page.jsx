@@ -68,7 +68,7 @@ const generate = () => {
       toast.error("An error occurred while submitting data.");
     }
   };
-  
+      
   return (
     <div className="grid grid-cols-2 w-full min-h-screen">
       <div className="col-1 border-yellow-300 border-r-2 rounded-r-xl max-h-screen overflow-y-auto flex flex-col gap-10 justify-center items-center">
@@ -146,9 +146,17 @@ const generate = () => {
             />
 
             <button
-              className=" mt-10 px-4 py-1 mx-10 w-fit text-sm rounded-2xl text-zinc-950 bg-yellow-300 hover:bg-yellow-500 hover:scale-[1.09]"
+              disabled = {
+                handel == "" || picture == "" || links[0].link == "" 
+              }
+              className="mt-10 px-4 py-1 mx-10 w-fit text-sm rounded-2xl text-zinc-950 bg-yellow-300 hover:bg-yellow-500 hover:scale-[1.09] disabled:opacity-70 "
               onClick={() => {
-                submitLinks();
+                if (handel == "" || picture == "" || links[0].link == "" ) {
+                    toast.error("Please enter all the data first")
+                }
+                else{
+                    submitLinks();
+                }
               }}
             >
               Done...
